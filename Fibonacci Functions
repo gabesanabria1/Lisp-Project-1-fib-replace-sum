@@ -1,0 +1,28 @@
+;;Normal Recursive Function
+(defun fibonacci (n)
+   "Uses normal recursion to solve for nth term in fibonacci sequence"
+  
+   (cond ((eql n 0) 0)
+        ((eql n 1) 1)
+        (t (+ (fibonacci (1- n)) (fibonacci (- n 2))))
+   )
+)
+
+
+
+;; Tail Recursive Function
+
+(defun fibonacci-TR (n)
+   "Uses tail recursion to solve for nth term in fibonacci sequence"
+ 
+   (defun fibHelper (n1 n2 a)
+      "Helps the tail recursion version of Fibonacci"
+      
+	  (cond ((eql a n) n2)
+	        (t (fibHelper n2 (+ n1 n2) (1+ a)))
+	  )
+	)
+
+   (fibHelper 0 1 1)
+)
+
