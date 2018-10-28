@@ -1,0 +1,12 @@
+(defun sum (n m)
+  "Recursively adds two integers"
+  (cond ((eql m 0) n)
+	
+	((or (not(numberp n)) (not(numberp m))) nil)
+
+	((> m 0)  (sum (1+ n) (1- m)))
+	((< m 0)  (sum (1- n) (1+ m)))
+
+	))
+  
+  
