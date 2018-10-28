@@ -1,0 +1,6 @@
+(defun my-replace (e1 e2 L)
+  (cond ((endp L) nil)
+	((eql e1 (first L)) (cons e2 (my-replace e1 e2 (rest L))))
+	((listp (first L)) (cons (my-replace e1 e2 (first L)) (my-replace e1 e2 (rest L)) ))
+	(t (cons (first L) (my-replace e1 e2 (rest L))))))	
+  
