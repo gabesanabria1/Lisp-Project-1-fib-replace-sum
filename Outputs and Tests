@@ -1,0 +1,424 @@
+
+
+%%%-------------------------------------------------------------------------------------
+
+; SLIME 2015-08-20  										%%% Problem 1 - Sum
+
+%%%----------------Code----------------%%%
+
+(defun sum (n m)
+  "Recursively adds two integers"
+  (cond ((eql m 0) n)
+	
+	((or (not(numberp n)) (not(numberp m))) nil)
+
+	((> m 0)  (sum (1+ n) (1- m)))
+	((< m 0)  (sum (1- n) (1+ m)))
+
+  )
+)
+
+%%%----------------Runs----------------%%%
+
+CL-USER> (sum -5 -8)
+-13
+CL-USER> (sum -5 40)
+35
+CL-USER> (sum 20 -3)
+17
+CL-USER> (sum 19 23)
+42
+CL-USER> (sum -5 0)
+-5
+CL-USER> (sum 5 0)
+5
+CL-USER> (sum 0 -4)
+-4
+CL-USER> (sum 0 52)
+52
+CL-USER> (sum 0 0)
+0
+CL-USER> (sum 'a -8)
+NIL
+CL-USER> (sum -5 'k)
+NIL
+
+%%%-------------------------------------------------------------------------------------
+; SLIME 2015-08-20											%%% Problem 2 - My-Replace
+
+%%%----------------Code----------------%%%
+
+(defun my-replace (e1 e2 L)
+  (cond ((endp L) nil)
+	((equal e1 (first L)) (cons e2 (my-replace e1 e2 (rest L))))
+	((listp (first L)) (cons (my-replace e1 e2 (first L)) (my-replace e1 e2 (rest L)) ))
+	(t (cons (first L) (my-replace e1 e2 (rest L))))
+  )
+)	
+  
+
+%%%----------------Runs----------------%%%
+
+CL-USER> (my-replace 'a 'x '(a b a b))
+(X B X B)
+
+CL-USER> (my-replace 'a 'x '((a) b (((a))) b))
+((X) B (((X))) B)
+
+CL-USER> (my-replace 'a 'x '(a ((a) b (a)) b a))
+(X ((X) B (X)) B X)
+
+CL-USER> (my-replace '(a) '(x) '(a ((a) b (a)) b a))
+(A ((X) B (X)) B A)
+
+CL-USER> (my-replace 'a '(x y (z)) '(a (a b (a)) b a))
+((X Y (Z)) ((X Y (Z)) B ((X Y (Z)))) B (X Y (Z)))
+
+CL-USER> (my-replace 'c 'x '(a ((a) b (a)) b a))
+(A ((A) B (A)) B A)
+
+
+
+
+%%%-------------------------------------------------------------------------------------
+; SLIME 2015-08-20											%%% Problem 3 - Fibonacci
+
+
+%%%----------------Code----------------%%%
+
+(defun fibonacci (n)
+   "Uses normal recursion to solve for nth term in fibonacci sequence"
+  
+   (cond ((eql n 0) 0)
+        ((eql n 1) 1)
+        (t (+ (fibonacci (1- n)) (fibonacci (- n 2))))
+   )
+)
+
+(defun fibonacci-TR (n)
+   "Uses tail recursion to solve for nth term in fibonacci sequence"
+ 
+   (defun fibHelper (n1 n2 a)
+      "Helps the tail recursion version of Fibonacci"
+      
+	  (cond ((eql a n) n2)
+	        (t (fibHelper n2 (+ n1 n2) (1+ a)))
+	  )
+	)
+
+   (cond ((eql n 0) 0)
+	 	 (t(fibHelper 0 1 1))
+   )
+)
+
+%%%----------------Runs----------------%%%
+
+CL-USER> (fibonacci 7)
+13
+CL-USER> (fibonacci 8)
+21
+CL-USER> (fibonacci 9)
+34
+CL-USER> (fibonacci 10)
+55
+
+
+CL-USER> (fibonacci-TR 7)
+13
+CL-USER> (fibonacci-TR 8)
+21
+CL-USER> (fibonacci-TR 9)
+34
+CL-USER> (fibonacci-TR 10)
+55
+
+
+CL-USER> (comparefibonaccis)								%%%Interpreted Fib Function
+TAIL REC FIBONACCI 10
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   3.9e-5 seconds of user run time
+;   3.0e-6 seconds of system run time
+;   129,218 CPU cycles
+;   0 page faults and
+;   1,856 bytes consed.
+; 
+FIBONACCI 10
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   3.25e-4 seconds of user run time
+;   2.2e-5 seconds of system run time
+;   1,101,252 CPU cycles
+;   0 page faults and
+;   43,736 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 15
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   5.1e-5 seconds of user run time
+;   4.0e-6 seconds of system run time
+;   170,921 CPU cycles
+;   0 page faults and
+;   2,696 bytes consed.
+; 
+FIBONACCI 15
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   0.002847 seconds of user run time
+;   0.0 seconds of system run time
+;   9,084,019 CPU cycles
+;   0 page faults and
+;   230,736 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 20
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   4.5e-5 seconds of user run time
+;   0.0 seconds of system run time
+;   141,132 CPU cycles
+;   0 page faults and
+;   3,536 bytes consed.
+; 
+FIBONACCI 20
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.06 seconds of real time
+;   0.057321 seconds of user run time
+;   0.004027 seconds of system run time
+;   196,021,868 CPU cycles
+;   [Run times include 0.03 seconds GC run time]
+;   0 page faults and
+;   2,560,152 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 25
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   7.9e-5 seconds of user run time
+;   5.0e-6 seconds of system run time
+;   265,385 CPU cycles
+;   0 page faults and
+;   4,376 bytes consed.
+; 
+FIBONACCI 25
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.34 seconds of real time
+;   0.340714 seconds of user run time
+;   0.0 seconds of system run time
+;   1,087,768,075 CPU cycles
+;   [Run times include 0.03 seconds GC run time]
+;   0 page faults and
+;   28,392,560 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 30
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   1.08e-4 seconds of user run time
+;   0.0 seconds of system run time
+;   338,566 CPU cycles
+;   0 page faults and
+;   5,216 bytes consed.
+; 
+FIBONACCI 30
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   3.65 seconds of real time
+;   3.653184 seconds of user run time
+;   0.003533 seconds of system run time
+;   11,674,573,440 CPU cycles
+;   [Run times include 0.08 seconds GC run time]
+;   0 page faults and
+;   314,879,904 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 35
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   1.06e-4 seconds of user run time
+;   0.0 seconds of system run time
+;   336,136 CPU cycles
+;   0 page faults and
+;   6,056 bytes consed.
+; 
+FIBONACCI 35
+Warning:  TIME form in a non-null environment, forced to interpret.
+Compiling entire form will produce more accurate times.
+
+; Evaluation took:
+;   40.41 seconds of real time
+;   40.3582 seconds of user run time
+;   0.051314 seconds of system run time
+;   129,015,071,814 CPU cycles
+;   [Run times include 0.94 seconds GC run time]
+;   0 page faults and
+;   3,492,073,096 bytes consed.
+; 
+=======================================================
+NIL
+
+
+
+
+CL-USER> (comparefibonaccis)								%%%Compiled Fib Function
+TAIL REC FIBONACCI 10
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   1.8e-5 seconds of user run time
+;   1.0e-6 seconds of system run time
+;   60,158 CPU cycles
+;   0 page faults and
+;   48 bytes consed.
+; 
+FIBONACCI 10
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   4.0e-6 seconds of user run time
+;   0.0 seconds of system run time
+;   9,984 CPU cycles
+;   0 page faults and
+;   0 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 15
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   7.0e-6 seconds of user run time
+;   0.0 seconds of system run time
+;   20,215 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+FIBONACCI 15
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   3.8e-5 seconds of user run time
+;   2.0e-6 seconds of system run time
+;   124,838 CPU cycles
+;   0 page faults and
+;   0 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 20
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   4.0e-6 seconds of user run time
+;   0.0 seconds of system run time
+;   12,529 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+FIBONACCI 20
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   3.02e-4 seconds of user run time
+;   1.8e-5 seconds of system run time
+;   1,020,838 CPU cycles
+;   0 page faults and
+;   0 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 25
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   4.0e-6 seconds of user run time
+;   1.0e-6 seconds of system run time
+;   12,011 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+FIBONACCI 25
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   0.003533 seconds of user run time
+;   0.0 seconds of system run time
+;   11,275,174 CPU cycles
+;   0 page faults and
+;   0 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 30
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   1.1e-5 seconds of user run time
+;   0.0 seconds of system run time
+;   32,196 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+FIBONACCI 30
+
+; Evaluation took:
+;   0.04 seconds of real time
+;   0.037205 seconds of user run time
+;   0.0 seconds of system run time
+;   118,841,163 CPU cycles
+;   0 page faults and
+;   0 bytes consed.
+; 
+=======================================================
+TAIL REC FIBONACCI 35
+
+; Evaluation took:
+;   0.0 seconds of real time
+;   1.2e-5 seconds of user run time
+;   0.0 seconds of system run time
+;   36,119 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+FIBONACCI 35
+
+; Evaluation took:
+;   0.41 seconds of real time
+;   0.413855 seconds of user run time
+;   0.0 seconds of system run time
+;   1,321,487,293 CPU cycles
+;   0 page faults and
+;   32 bytes consed.
+; 
+=======================================================
+NIL
+%%%-------------------------------------------------------------------------------------
